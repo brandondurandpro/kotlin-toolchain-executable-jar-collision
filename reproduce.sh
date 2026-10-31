@@ -6,18 +6,19 @@
 set -u
 cd "$(dirname "$0")"
 
+# In Git Bash, kotlin.bat must find the tar.exe of Windows, not the GNU tar of Git, which reads "C:" as a host.
 case "$(uname -s)" in
-  MINGW* | MSYS* | CYGWIN*) kotlin=./kotlin.bat ;;
-  *) kotlin=./kotlin ;;
+  MINGW* | MSYS* | CYGWIN*) kotlin() { PATH="/c/Windows/System32:$PATH" ./kotlin.bat "$@"; } ;;
+  *) kotlin() { ./kotlin "$@"; } ;;
 esac
 jar=build/tasks/_app_executableJarJvm/app-jvm-executable.jar
 
 echo "== 1. kotlin run: the classpath of the module is correct"
-"$kotlin" run -m app --no-compose-hot-reload -- --check || exit 2
+kotlin run -m app --no-compose-hot-reload -- --check || exit 2
 
 echo
 echo "== 2. kotlin package -f executable-jar"
-"$kotlin" package -m app -f executable-jar || exit 2
+kotlin package -m app -f executable-jar || exit 2
 
 echo
 echo "== 3. Entries of the executable jar named runtime-desktop / runtime-saveable-desktop (size, name)"
