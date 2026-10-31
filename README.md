@@ -79,8 +79,10 @@ Every jar of the runtime classpath ends up in the executable jar, for example un
 | Kotlin Toolchain | 0.13.0 (the `kotlin` / `kotlin.bat` wrappers of this repository) |
 | Compose Multiplatform | 1.12.1, the default of Kotlin Toolchain 0.13.0 |
 
-Also run by the [Reproduce](.github/workflows/reproduce.yml) workflow on the GitHub-hosted `ubuntu-24.04`,
-`windows-latest` and `macos-15` runners.
+Also reproduced by the [Reproduce](.github/workflows/reproduce.yml) workflow on the GitHub-hosted runners
+`ubuntu-24.04`, `windows-latest` and `macos-15`, with Temurin 25:
+[run 41247017573](https://github.com/brandondurandpro/kotlin-toolchain-executable-jar-collision/actions/runs/41247017573)
+(each job fails because the bug is reproduced).
 
 ## Workaround
 
