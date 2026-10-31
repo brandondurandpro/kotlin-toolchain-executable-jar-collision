@@ -6,9 +6,13 @@
 set -u
 cd "$(dirname "$0")"
 
-# In Git Bash, kotlin.bat must find the tar.exe of Windows, not the GNU tar of Git, which reads "C:" as a host.
+# In Git Bash, kotlin.bat runs through cmd, without the tools of Git on the PATH: it must find the tar.exe of
+# Windows, not the GNU tar of Git, which reads "C:" as a host name.
 case "$(uname -s)" in
-  MINGW* | MSYS* | CYGWIN*) kotlin() { PATH="/c/Windows/System32:$PATH" ./kotlin.bat "$@"; } ;;
+  MINGW* | MSYS* | CYGWIN*)
+    windows_path="$(printf '%s' "$PATH" | tr ':' '\n' | grep -vE '^/(usr|mingw64|bin)(/|$)' | paste -sd: -)"
+    kotlin() { PATH="$windows_path" cmd //c kotlin.bat "$@"; }
+    ;;
   *) kotlin() { ./kotlin "$@"; } ;;
 esac
 jar=build/tasks/_app_executableJarJvm/app-jvm-executable.jar
